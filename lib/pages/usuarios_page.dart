@@ -1,5 +1,7 @@
 import 'package:chatapp/models/usuario.dart';
+import 'package:chatapp/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
@@ -14,22 +16,29 @@ class UsuariosPage extends StatefulWidget {
 class _UsuariosPageState extends State<UsuariosPage> {
 
 final usuarios = [
-    Usuario( uuid: '1',nombre :'Maria',email:"test1@email.com",online: true),
-    Usuario( uuid: '2',nombre :'Valeria',email:"test2@email.com",online: false),
-    Usuario( uuid: '3',nombre :'Melissa',email:"test1@email.com",online: true)
+    Usuario( uid: '1',nombre :'Maria',email:"test1@email.com",online: true),
+    Usuario( uid: '2',nombre :'Valeria',email:"test2@email.com",online: false),
+    Usuario( uid: '3',nombre :'Melissa',email:"test1@email.com",online: true)
 ];
  RefreshController _refreshController =RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
+    final _authService = Provider.of<AuthService>(context);
+    final usuario = _authService.usuario;
     return Scaffold(
        appBar: AppBar(
          centerTitle: true,
-         title: Text("Mi nombre", style: TextStyle(color:Colors.black),),
+         title: Text(usuario.nombre, style: TextStyle(color:Colors.black),),
          
          elevation: 1,
          backgroundColor: Colors.white,
-         leading: IconButton(icon: Icon(Icons.exit_to_app,color: Colors.black,) , onPressed: (){}),
+         leading: IconButton(icon: Icon(Icons.exit_to_app,color: Colors.black,) , onPressed: (){
+           AuthService.deleteToken();
+           Navigator.pushReplacementNamed(context, 'login');
+           //desconetarse del socket server
+          //_authService
+         }),
          actions: [
            Container(
              margin:EdgeInsets.only(right: 10),

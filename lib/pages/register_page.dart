@@ -1,8 +1,11 @@
+import 'package:chatapp/helpers/mostrar_alerta.dart';
+import 'package:chatapp/services/auth_service.dart';
 import 'package:chatapp/widgets/btn_azul.dart';
 import 'package:chatapp/widgets/custom_input.dart';
 import 'package:chatapp/widgets/labels.dart';
 import 'package:chatapp/widgets/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
@@ -43,6 +46,7 @@ class __FormState extends State<_Form> {
   final nombreCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -67,8 +71,20 @@ class __FormState extends State<_Form> {
           ),
           BtnAzul(
             label: 'Ingresar',
-            onPressed: () {
+            onPressed:authService.autenticando?null:() async {
+              final registerAction = await authService.register(this.emailCtrl.text.trim(), this.passwordCtrl.text.trim(),this.nombreCtrl.text.trim());
+              FocusScope.of(context).unfocus();
+              if (registerAction==true){
+                print("Listo");
+                Navigator.pushReplacementNamed(context, 'usuarios');
+                //Ingresar
+              }else{
+                mostrarAlerta(context, "Registro incorrecto", registerAction);
+                //Mostrar alerta de error
+
+              }
               print('Ejecutado');
+
             },
           )
         ],
