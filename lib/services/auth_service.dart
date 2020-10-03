@@ -70,7 +70,7 @@ class AuthService with ChangeNotifier {
     print(token);
     final resp = await http.get('${Environment.apiUrl}/login/renew',
         headers: {'Content-Type': 'application/json', 'x-token': token});    
-        print(resp.body);
+        //print(resp.body);
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
       await this._guardarToken(loginResponse.token);

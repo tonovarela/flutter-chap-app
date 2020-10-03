@@ -1,5 +1,6 @@
 import 'package:chatapp/helpers/mostrar_alerta.dart';
 import 'package:chatapp/services/auth_service.dart';
+import 'package:chatapp/services/socket_service.dart';
 
 import 'package:chatapp/widgets/btn_azul.dart';
 import 'package:chatapp/widgets/custom_input.dart';
@@ -47,6 +48,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -71,7 +73,8 @@ class __FormState extends State<_Form> {
               FocusScope.of(context).unfocus();
               final loginAction = await authService.login(this.emailCtrl.text.trim(), this.passwordCtrl.text.trim());
               if (loginAction){
-                print("Listo");
+                //print("Listo");
+                socketService.connect();
                 Navigator.pushReplacementNamed(context, 'usuarios');
                 //Ingresar
               }else{
